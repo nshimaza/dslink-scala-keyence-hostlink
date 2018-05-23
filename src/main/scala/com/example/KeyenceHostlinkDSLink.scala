@@ -20,7 +20,7 @@ package com.example
 
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
-import akka.stream.scaladsl.{Framing, Sink, Source, Tcp}
+import akka.stream.scaladsl.{Framing, RestartSource, Sink, Source, Tcp}
 import akka.util.ByteString
 import org.dsa.iot.dslink.node.value.{Value, ValueType}
 import org.dsa.iot.dslink.{DSLink, DSLinkFactory, DSLinkHandler}
@@ -37,24 +37,27 @@ class KeyenceHostLinkDSLinkHandler(address: String, device: String, count: Int) 
   private val log = LoggerFactory.getLogger(getClass)
   override val isResponder = true
 
-  override def onResponderInitialized(link: DSLink): Unit = log.info("SimpleFileReadDSLink initialized")
+  override def onResponderInitialized(link: DSLink): Unit = log.info("KeyenceHostLinkDSLink initialized")
 
   override def onResponderConnected(link: DSLink): Unit = {
-    log.info("SimpleFileReadDSLink connected")
+    log.info("KeyenceHostLinkDSLink connected")
 
     val node = link.getNodeManager.getSuperRoot
       .createChild(device, true)
-      .setDisplayName(s"Values from device $device ($count)")
+      .setDisplayName(s"$device ($count)")
       .setValueType(ValueType.STRING)
       .setValue(new Value(""))
       .build
 
-    implicit val system = ActorSystem()
-    implicit val materializer = ActorMaterializer()
+    implicit val system: ActorSystem = ActorSystem()
+    implicit val materializer: ActorMaterializer = ActorMaterializer()
 
-    Source.tick(1.second, 1.second, ByteString(s"RDS $device $count\r\n"))
-      .via(Tcp().outgoingConnection(address, 8501))
-      .via(Framing.delimiter(ByteString("\r\n"), 30000))
+
+    RestartSource.withBackoff(1.seconds, 60.seconds, 0.1) { () =>
+      Source.tick(1.second, 500.milliseconds, ByteString(s"RDS $device $count\r\n"))
+        .via(Tcp().outgoingConnection(address, 8501))
+        .via(Framing.delimiter(ByteString("\r\n"), 30000))
+    }
       .to(Sink.foreach(s => node.setValue(new Value(s.utf8String))))
       .run()
   }
