@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory
 
 import scala.concurrent.duration._
 
-object KeyenceHostLinkDSLink {
+object KeyenceHostLink {
   def main(args: Array[String]): Unit =
     DSLinkFactory.start(args.drop(3), new KeyenceHostLinkDSLinkHandler(args(0), args(1), args(2).toInt))
 }

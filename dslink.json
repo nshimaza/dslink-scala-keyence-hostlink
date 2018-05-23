@@ -1,18 +1,19 @@
 {
   "name": "KeyenceUplinkDSLink",
-  "version": "0.0.1",
-  "description": "Acquiring data from Keyence KV-7500 via Uplink protocol",
+  "version": "0.1",
+  "description": "Acquiring data from Keyence KV-7500 via HostLink protocol",
   "license": "Cisco Sample Code License",
   "author": {
     "name": "Naoto Shimazaki",
     "email": "nshimaza@cisco.com"
   },
+  "main": "bin/dslink-scala-keyence-hostlink",
   "repository": {
     "type": "git",
-    "url": "https://github.com/nshimaza/KeyenceHostLinkDSLink"
+    "url": "https://github.com/nshimaza/dslink-scala-keyence-hostlink"
   },
   "bugs": {
-    "url": "https://github.com/nshimaza/KeyenceHostLinkDSLink/issues"
+    "url": "https://github.com/nshimaza/dslink-scala-keyence-hostlink/issues"
   },
   "configs": {
     "name": {

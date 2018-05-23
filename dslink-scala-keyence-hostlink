@@ -1,0 +1,2 @@
+#!/usr/bin/env sh
+java -Djava.net.preferIPv4Stack=true -jar lib/dslink-scala-keyence-hostlink-assembly-0.1.0-SNAPSHOT.jar "PLC addr" "Device Name" "count" $@
