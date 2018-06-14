@@ -1,5 +1,5 @@
 {
-  "name": "KeyenceUplinkDSLink",
+  "name": "dslink-scala-keyence-hostlink",
   "version": "0.1",
   "description": "Acquiring data from Keyence KV-7500 via HostLink protocol",
   "license": "Cisco Sample Code License",
