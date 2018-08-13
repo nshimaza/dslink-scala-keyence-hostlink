@@ -18,8 +18,6 @@
 
 package com.example
 
-import java.util
-
 import akka.Done
 import akka.actor.ActorSystem
 import akka.stream._
@@ -205,7 +203,7 @@ class KeyenceHostLinkDSLinkHandler() extends DSLinkHandler {
         val plc = Tcp().outgoingConnection(ipAddr, 8501)
           .via(Framing.delimiter(ByteString("\r\n"), 30000))
         val bcast = builder.add(Broadcast[ByteString](2, true))
-        val zip: FanInShape2[ByteString, ByteString, (ByteString, ByteString)] = builder.add(Zip[ByteString, ByteString])
+        val zip = builder.add(Zip[ByteString, ByteString])
         // @formatter:off
         in ~> bcast ~> plc ~> zip.in0
               bcast ~>        zip.in1
