@@ -202,7 +202,7 @@ class KeyenceHostLinkDSLinkHandler() extends DSLinkHandler {
         val in = Source.tick(1.second, interval.milliseconds, ByteString(s"RDS $devName$devAddr $count\r\n"))
         val plc = Tcp().outgoingConnection(ipAddr, 8501)
           .via(Framing.delimiter(ByteString("\r\n"), 30000))
-        val bcast = builder.add(Broadcast[ByteString](2, true))
+        val bcast = builder.add(Broadcast[ByteString](outputPorts = 2, eagerCancel = true))
         val zip = builder.add(Zip[ByteString, ByteString])
         // @formatter:off
         in ~> bcast ~> plc ~> zip.in0
